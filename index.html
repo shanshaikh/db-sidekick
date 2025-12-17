@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ask Your Database in Slack</title>
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --card: #121826;
+      --text: #e6e8ee;
+      --muted: #9aa4bf;
+      --accent: #6cf2c2;
+      --accent-2: #5aa9ff;
+      --danger: #ff6b6b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #121826, #0b0e14);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    header { padding: 5rem 1.5rem; text-align: center; max-width: 900px; margin: 0 auto; }
+    header h1 { font-size: 3rem; margin-bottom: 1rem; }
+    header p { font-size: 1.2rem; color: var(--muted); margin-bottom: 2rem; }
+    .cta { display: inline-block; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #000; padding: 0.9rem 1.5rem; border-radius: 8px; font-weight: 600; margin: 0.5rem; text-decoration: none; }
+    .cta.secondary { background: transparent; color: var(--text); border: 1px solid var(--muted); }
+    section { max-width: 1100px; margin: 0 auto; padding: 4rem 1.5rem; }
+    section h2 { font-size: 2rem; margin-bottom: 1rem; text-align: center; }
+    section p.subtitle { text-align: center; color: var(--muted); margin-bottom: 3rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+    .card { background: var(--card); border: 1px solid #1c2333; border-radius: 12px; padding: 1.5rem; }
+    .pricing { border: 1px solid #1c2333; border-radius: 16px; padding: 2rem; background: linear-gradient(180deg, #121826, #0b0e14); }
+    .highlight { border: 2px solid var(--accent); }
+    footer { text-align: center; padding: 3rem 1.5rem; color: var(--muted); border-top: 1px solid #1c2333; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-content { background: var(--card); padding: 2rem; border-radius: 12px; max-width: 400px; width: 100%; }
+    .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 0.7rem; margin: 0.5rem 0; border-radius: 6px; border: 1px solid #2a3350; background: #0b0e14; color: var(--text); }
+    .close { float: right; cursor: pointer; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Ask your database questions directly in Slack — safely and read-only.</h1>
+  <p>Get instant answers from Postgres using natural language. No dashboards. No SQL. No risky access.</p>
+  <a href="#" class="cta" onclick="openModal()">Request Founding Access</a>
+  <p style="margin-top:1rem;font-size:0.9rem;color:var(--accent);">🧪 Founding Beta · Limited to 30 teams · $29/month locked in</p>
+</header>
+
+<section>
+  <h2>The solution</h2>
+  <p class="subtitle">A read-only assistant that answers questions from your production database — inside Slack</p>
+  <div class="grid">
+    <div class="card"><h3>Ask in Slack</h3><p>“How many devices are in production right now?”</p></div>
+    <div class="card"><h3>Protected access</h3><p>Strict read-only enforcement — answers only, never changes.</p></div>
+    <div class="card"><h3>Instant results</h3><p>Clear answers returned in seconds, not SQL queries.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Why this is worth it</h2>
+  <p class="subtitle">This replaces far more expensive habits teams already accept</p>
+  <div class="grid">
+    <div class="card"><p>Interrupting engineers for simple questions</p></div>
+    <div class="card"><p>Granting risky production database access</p></div>
+    <div class="card"><p>Writing and double-checking ad-hoc SQL</p></div>
+    <div class="card"><p>Context switching just to get an answer</p></div>
+    <div class="card"><p>Waiting hours or days for basic data</p></div>
+  </div>
+  <p style="text-align:center;color:var(--muted);margin-top:2rem;max-width:700px;margin-left:auto;margin-right:auto;">
+    For most teams, avoiding <strong>one engineer interruption per week</strong> already justifies adopting a tool like this. 
+    Preventing <strong>one production mistake</strong> makes the cost trivial.
+  </p>
+</section>
+
+<section id="pricing">
+  <h2>Founding Beta Pricing</h2>
+  <p class="subtitle">Per Slack workspace · Cancel anytime</p>
+  <div style="display:flex;justify-content:center;">
+    <div class="pricing highlight" style="max-width:420px;width:100%;">
+      <h3>Founding Beta</h3>
+      <p style="font-size:2.5rem;margin:1rem 0;">$29<span style="font-size:1rem">/mo</span></p>
+      <ul>
+        <li>1 database connection</li>
+        <li>Unlimited users</li>
+        <li><strong>750 queries/month</strong></li>
+        <li>Strict read-only access</li>
+        <li>Basic audit logs</li>
+        <li>Founders pricing — never increases</li>
+      </ul>
+      <a href="#" class="cta" onclick="openModal()">Request Founding Access</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Slack-first · Read-only · Built for production databases</p>
+</footer>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">✕</span>
+      <h3>Request Founding Access</h3>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;"><em>Coming soon — the beta version isn’t live yet.</em></p>
+      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem;">Limited to 30 teams · $29/month locked in</p>
+      <form id="signupForm" onsubmit="submitForm(event)">
+        <input type="email" id="email" placeholder="Work email *" required />
+        <input type="text" id="company" placeholder="Company name *" required />
+  
+        <select id="role" required>
+          <option value="">Your role *</option>
+          <option>Engineer</option>
+          <option>Product Manager</option>
+          <option>Engineering Manager</option>
+          <option>CTO</option>
+          <option>Other</option>
+        </select>
+  
+        <select id="teamSize" required>
+          <option value="">Team size *</option>
+          <option>1-5</option>
+          <option>6-10</option>
+          <option>11-25</option>
+          <option>26-50</option>
+          <option>50+</option>
+        </select>
+  
+        <select id="dbType" required>
+          <option value="">Database type *</option>
+          <option>PostgreSQL</option>
+          <option>MySQL</option>
+          <option>Other</option>
+        </select>
+  
+        <select id="slackSize">
+          <option value="">Slack workspace size (optional)</option>
+          <option>1-20</option>
+          <option>21-100</option>
+          <option>101-500</option>
+          <option>500+</option>
+        </select>
+  
+        <select id="pricingFeedback">
+          <option value="">How does $29/month feel? (optional)</option>
+          <option value="cheap">Very reasonable</option>
+          <option value="fair">Fair for the value</option>
+          <option value="high">A bit high</option>
+          <option value="too_high">Too expensive</option>
+        </select>
+  
+        <textarea id="notes" placeholder="Anything else you want to tell us? (optional)" rows="3"></textarea>
+  
+        <button type="submit" class="cta" style="width:100%;margin-top:1rem;border:none;cursor:pointer;">Submit Request</button>
+      </form>
+      <div id="formMessage" style="margin-top: 1rem; display:none;"></div>
+    </div>
+</div>  
+
+<script>
+function openModal() { document.getElementById('modal').style.display = 'flex'; }
+function closeModal() { 
+  document.getElementById('modal').style.display = 'none'; 
+  document.getElementById('signupForm').reset();
+  document.getElementById('formMessage').style.display = 'none';
+}
+
+async function submitForm(e) {
+  e.preventDefault();
+  const data = {
+    email: document.getElementById('email').value,
+    company: document.getElementById('company').value,
+    role: document.getElementById('role').value,
+    team_size: document.getElementById('teamSize').value,
+    db_type: document.getElementById('dbType').value,
+    slack_workspace_size: document.getElementById('slackSize').value || null,
+    pricing_feedback: document.getElementById('pricingFeedback').value || null,
+    notes: document.getElementById('notes').value || null
+  };
+
+  const messageDiv = document.getElementById('formMessage');
+  const submitButton = e.target.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = 'Submitting...';
+  messageDiv.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/early-access', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if(res.ok){
+      messageDiv.style.color = 'var(--accent)';
+      messageDiv.textContent = '✓ Thanks! We\'ll review your request and send an invitation soon.';
+      messageDiv.style.display = 'block';
+      e.target.reset();
+      setTimeout(closeModal, 2000);
+    } else {
+      throw new Error(result.detail || 'Something went wrong');
+    }
+  } catch(err){
+    messageDiv.style.color = 'var(--danger)';
+    messageDiv.textContent = '✗ ' + (err.message || 'Failed to submit. Please try again.');
+    messageDiv.style.display = 'block';
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Submit Request';
+  }
+}
+</script>
+
+</body>
+</html>
