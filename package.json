@@ -1,0 +1,17 @@
+{
+  "name": "sidekick-landing",
+  "version": "1.0.0",
+  "description": "Landing page for Sidekick",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@sendgrid/mail": "^8.1.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
+
