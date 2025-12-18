@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ask Your Database in Slack</title>
+  <title>Sidekick — Ask Your Database in Slack</title>
   <style>
     :root {
       --bg: #0b0e14;
@@ -22,7 +22,8 @@
       line-height: 1.6;
     }
     header { padding: 5rem 1.5rem; text-align: center; max-width: 900px; margin: 0 auto; }
-    header h1 { font-size: 3rem; margin-bottom: 1rem; }
+    header h1 { font-size: 3rem; margin-bottom: 0.5rem; }
+    header .product-name { font-size: 0.9rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
     header p { font-size: 1.2rem; color: var(--muted); margin-bottom: 2rem; }
     .cta { display: inline-block; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #000; padding: 0.9rem 1.5rem; border-radius: 8px; font-weight: 600; margin: 0.5rem; text-decoration: none; }
     .cta.secondary { background: transparent; color: var(--text); border: 1px solid var(--muted); }
@@ -37,7 +38,10 @@
     .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; padding: 1rem; }
     .modal-content { background: var(--card); padding: 2rem; border-radius: 12px; max-width: 400px; width: 100%; }
     .modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 0.7rem; margin: 0.5rem 0; border-radius: 6px; border: 1px solid #2a3350; background: #0b0e14; color: var(--text); }
+    .modal-content input:disabled, .modal-content select:disabled, .modal-content textarea:disabled, .modal-content button:disabled { opacity: 0.5; cursor: not-allowed; }
     .close { float: right; cursor: pointer; color: var(--muted); }
+    .form-disabled { opacity: 0.5; pointer-events: none; }
+    .cta.disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
 <body>
@@ -45,8 +49,8 @@
 <header>
   <h1>Ask your database questions directly in Slack — safely and read-only.</h1>
   <p>Get instant answers from Postgres using natural language. No dashboards. No SQL. No risky access.</p>
-  <a href="#" class="cta" onclick="openModal()">Request Founding Access</a>
-  <p style="margin-top:1rem;font-size:0.9rem;color:var(--accent);">🧪 Founding Beta · Limited to 30 teams · $29/month locked in</p>
+  <a href="#" class="cta" id="requestAccessBtn" onclick="openModal()">Request Founding Access</a>
+  <p style="margin-top:1rem;font-size:0.9rem;color:var(--accent);" id="signupStatus">🧪 Founding Beta · Limited to 30 teams · $29/month locked in</p>
 </header>
 
 <section>
@@ -57,6 +61,103 @@
     <div class="card"><h3>Protected access</h3><p>Strict read-only enforcement — answers only, never changes.</p></div>
     <div class="card"><h3>Instant results</h3><p>Clear answers returned in seconds, not SQL queries.</p></div>
   </div>
+</section>
+
+<section>
+    <h2>What it looks like</h2>
+    <p class="subtitle">Ask a question in Slack — Sidekick returns a safe, read-only result</p>
+  
+    <div style="max-width:820px;margin:0 auto;">
+  
+      <!-- User message -->
+      <div class="card" style="margin-bottom:1rem;">
+        <p style="margin-bottom:0.25rem;">
+          <strong style="color:var(--accent);">You</strong>
+          <span style="color:var(--muted);"> 10:42 AM</span>
+        </p>
+        <p>
+            <strong style="color:var(--accent-2);">/sidekick</strong> Show me all the customers that have bought something and the most expensive product each one has bought,
+          and order them from most expensive to least
+        </p>
+      </div>
+  
+      <!-- Sidekick response -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <p style="margin-bottom:0.5rem;">
+          <strong style="color:var(--accent-2);">Sidekick</strong>
+          <span style="color:var(--muted);"> 10:42 AM</span>
+        </p>
+  
+        <p style="margin-bottom:0.75rem;">✅ <strong>Query Results (7 rows)</strong></p>
+  
+        <pre style="
+  background:#0b0e14;
+  border:1px solid #1c2333;
+  border-radius:8px;
+  padding:1rem;
+  overflow-x:auto;
+  font-size:0.85rem;
+  color:var(--text);
+  ">
+  customer_id | first_name | last_name | email                  | phone    | status | total_spent | loyalty_points | product_id | product_name            | most_expensive_product_price
+  ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  5           | Eve        | Davis     | eve.davis@email.com    | 555-0105 | active | 3200.00     | 320            | 6          | DSLR Camera             | 1599.99
+  1           | Alice      | Smith     | alice.smith@email.com  | 555-0101 | active | 1250.50     | 125            | 1          | Gaming Laptop Pro       | 1299.99
+  2           | Bob        | Jones     | bob.jones@email.com    | 555-0102 | active | 890.25      | 89             | 2          | SmartPhone X            | 899.99
+  7           | Grace      | Wilson    | grace.wilson@email.com | 555-0107 | active | 1890.25     | 189            | 7          | Wide Angle Lens         | 599.99
+  3           | Carol      | White     | carol.white@email.com  | 555-0103 | active | 2100.75     | 210            | 3          | Tablet Plus             | 499.99
+  1           | Alice      | Smith     | alice.smith@email.com  | 555-0101 | active | 1250.50     | 125            | 4          | Wireless Headphones     | 199.99
+  2           | Bob        | Jones     | bob.jones@email.com    | 555-0102 | active | 890.25      | 89             | 5          | Bluetooth Speaker       | 79.99
+  </pre>
+  
+        <p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem;">
+          Execution time: <strong>0.02s</strong> · Read-only query
+        </p>
+      </div>
+  
+      <!-- Follow-up user message -->
+      <div class="card" style="margin-bottom:1rem;">
+        <p style="margin-bottom:0.25rem;">
+          <strong style="color:var(--accent);">You</strong>
+          <span style="color:var(--muted);"> 10:43 AM</span>
+        </p>
+        <p>
+            <strong style="color:var(--accent-2);">/sidekick</strong> Only show active customers from the last 30 days
+        </p>
+      </div>
+  
+      <!-- Follow-up Sidekick response -->
+      <div class="card">
+        <p style="margin-bottom:0.5rem;">
+          <strong style="color:var(--accent-2);">Sidekick</strong>
+          <span style="color:var(--muted);"> 10:43 AM</span>
+        </p>
+  
+        <p style="margin-bottom:0.75rem;">✅ <strong>Query Results (4 rows)</strong></p>
+  
+        <pre style="
+  background:#0b0e14;
+  border:1px solid #1c2333;
+  border-radius:8px;
+  padding:1rem;
+  overflow-x:auto;
+  font-size:0.85rem;
+  color:var(--text);
+  ">
+  customer_id | first_name | last_name | email                  | status | product_name      | most_expensive_product_price | last_purchase_date
+  ----------------------------------------------------------------------------------------------------------------------------------
+  5           | Eve        | Davis     | eve.davis@email.com    | active | DSLR Camera       | 1599.99                     | 2025-09-28
+  1           | Alice      | Smith     | alice.smith@email.com  | active | Gaming Laptop Pro | 1299.99                     | 2025-09-25
+  7           | Grace      | Wilson    | grace.wilson@email.com | active | Wide Angle Lens   | 599.99                      | 2025-09-21
+  3           | Carol      | White     | carol.white@email.com  | active | Tablet Plus       | 499.99                      | 2025-09-19
+  </pre>
+  
+        <p style="font-size:0.85rem;color:var(--muted);margin-top:0.5rem;">
+          Filtered previous result · Active customers · Last 30 days · Read-only
+        </p>
+      </div>
+  
+    </div>
 </section>
 
 <section>
@@ -90,7 +191,7 @@
         <li>Basic audit logs</li>
         <li>Founders pricing — never increases</li>
       </ul>
-      <a href="#" class="cta" onclick="openModal()">Request Founding Access</a>
+      <a href="#" class="cta" id="requestAccessBtn2" onclick="openModal()">Request Founding Access</a>
     </div>
   </div>
 </section>
@@ -103,8 +204,12 @@
     <div class="modal-content">
       <span class="close" onclick="closeModal()">✕</span>
       <h3>Request Founding Access</h3>
-      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;"><em>Coming soon — the beta version isn’t live yet.</em></p>
-      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem;">Limited to 30 teams · $29/month locked in</p>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;"><em>Coming soon — the beta version isn't live yet.</em></p>
+      <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1rem;" id="modalSignupStatus">Limited to 30 teams · $29/month locked in</p>
+      <div id="fullMessage" style="display:none;padding:1rem;background:#1c2333;border:1px solid var(--danger);border-radius:8px;margin-bottom:1rem;color:var(--danger);">
+        <strong>We're Full!</strong><br>
+        <span style="font-size:0.9rem;">We've reached our limit of 30 founding beta signups. Thanks for your interest!</span>
+      </div>
       <form id="signupForm" onsubmit="submitForm(event)">
         <input type="email" id="email" placeholder="Work email *" required />
         <input type="text" id="company" placeholder="Company name *" required />
@@ -159,17 +264,135 @@
 </div>  
 
 <script>
-function openModal() { document.getElementById('modal').style.display = 'flex'; }
+let signupStatus = { currentCount: 0, maxSignups: 30, isFull: false };
+
+// Check signup status on page load
+async function checkSignupStatus() {
+  try {
+    const res = await fetch('/api/early-access-status');
+    if (res.ok) {
+      signupStatus = await res.json();
+      updateUI();
+    }
+  } catch (err) {
+    console.error('Error checking signup status:', err);
+  }
+}
+
+function updateUI() {
+  const { currentCount, maxSignups, isFull, spotsRemaining } = signupStatus;
+  
+  // Update status text
+  const statusText = isFull 
+    ? `🧪 Founding Beta · Full (${currentCount}/${maxSignups} signups)` 
+    : `🧪 Founding Beta · ${spotsRemaining} spots remaining · $29/month locked in`;
+  
+  document.getElementById('signupStatus').textContent = statusText;
+  document.getElementById('modalSignupStatus').textContent = statusText;
+  
+  // Disable buttons and form if full
+  const requestBtns = document.querySelectorAll('#requestAccessBtn, #requestAccessBtn2');
+  const form = document.getElementById('signupForm');
+  const fullMessage = document.getElementById('fullMessage');
+  
+  if (isFull) {
+    requestBtns.forEach(btn => {
+      btn.classList.add('disabled');
+      btn.style.pointerEvents = 'none';
+      btn.textContent = 'Founding Beta Full';
+    });
+    form.classList.add('form-disabled');
+    fullMessage.style.display = 'block';
+    form.querySelectorAll('input, select, textarea, button').forEach(el => el.disabled = true);
+  } else {
+    requestBtns.forEach(btn => {
+      btn.classList.remove('disabled');
+      btn.style.pointerEvents = 'auto';
+      btn.textContent = 'Request Founding Access';
+    });
+    form.classList.remove('form-disabled');
+    fullMessage.style.display = 'none';
+    form.querySelectorAll('input, select, textarea, button').forEach(el => el.disabled = false);
+  }
+}
+
+// Check email uniqueness
+async function checkEmailUniqueness(email) {
+  if (!email) return null;
+  try {
+    const res = await fetch(`/api/early-access-status?email=${encodeURIComponent(email)}`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.emailExists;
+    }
+  } catch (err) {
+    console.error('Error checking email:', err);
+  }
+  return null;
+}
+
+function openModal() { 
+  // Refresh status when opening modal
+  checkSignupStatus().then(() => {
+    document.getElementById('modal').style.display = 'flex';
+  });
+}
+
 function closeModal() { 
   document.getElementById('modal').style.display = 'none'; 
   document.getElementById('signupForm').reset();
   document.getElementById('formMessage').style.display = 'none';
 }
 
+// Check email on blur
+document.addEventListener('DOMContentLoaded', function() {
+  checkSignupStatus();
+  
+  const emailInput = document.getElementById('email');
+  if (emailInput) {
+    emailInput.addEventListener('blur', async function() {
+      const email = this.value.trim();
+      if (email) {
+        const messageDiv = document.getElementById('formMessage');
+        const exists = await checkEmailUniqueness(email);
+        if (exists) {
+          messageDiv.style.color = 'var(--danger)';
+          messageDiv.textContent = '✗ You have already signed up with this email.';
+          messageDiv.style.display = 'block';
+        } else {
+          messageDiv.style.display = 'none';
+        }
+      }
+    });
+  }
+});
+
 async function submitForm(e) {
   e.preventDefault();
+  
+  // Check if form is disabled (at capacity)
+  if (signupStatus.isFull) {
+    const messageDiv = document.getElementById('formMessage');
+    messageDiv.style.color = 'var(--danger)';
+    messageDiv.textContent = '✗ Sorry, we\'ve reached the limit of 30 founding beta signups.';
+    messageDiv.style.display = 'block';
+    return;
+  }
+  
+  const emailValue = document.getElementById('email').value.trim();
+  
+  // Check email uniqueness before submitting
+  const emailExists = await checkEmailUniqueness(emailValue);
+  if (emailExists) {
+    const messageDiv = document.getElementById('formMessage');
+    messageDiv.style.color = 'var(--danger)';
+    messageDiv.textContent = '✗ You have already signed up with this email.';
+    messageDiv.style.display = 'block';
+    return;
+  }
+  
   const data = {
-    email: document.getElementById('email').value,
+    email: emailValue,
     company: document.getElementById('company').value,
     role: document.getElementById('role').value,
     team_size: document.getElementById('teamSize').value,
@@ -194,10 +417,11 @@ async function submitForm(e) {
     const result = await res.json();
     if(res.ok){
       messageDiv.style.color = 'var(--accent)';
-      messageDiv.textContent = '✓ Thanks! We\'ll review your request and send an invitation soon.';
+      messageDiv.innerHTML = '✓ Thanks! We\'ve sent a confirmation email and plan to send an invitation soon!<br><small style="font-size:0.9rem;">Please check your spam folder in case you don\'t see the email.</small>';
       messageDiv.style.display = 'block';
       e.target.reset();
-      setTimeout(closeModal, 2000);
+      // Refresh signup status after successful submission
+      await checkSignupStatus();
     } else {
       throw new Error(result.detail || 'Something went wrong');
     }
@@ -211,6 +435,11 @@ async function submitForm(e) {
   }
 }
 </script>
+
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 
 </body>
 </html>
